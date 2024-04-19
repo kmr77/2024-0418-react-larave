@@ -33,15 +33,15 @@ export default function Dashboard({ auth, books }) {
     const confirmUserDeletion = () => {
         setConfirmingUserDeletion(true);
     };
-    const confirmBookUpdate = (is,titile,content,category) => {
+    const confirmBookUpdate = (id,title,content,category) => {
         setData({id:id, title:title, content:content, category:category})
         setConfirmingBookUpdate(true);
     };
 
-    const updateBook = () => {
+    const updateBook = (e) => {
         e.preventDefault();
 
-        put(route('books.update'), {
+        put(route('books.update', data.id), {
             preserveScroll: true,
             onSuccess: () => closeModal_u(),
             onError: () => passwordInput.current.focus(),
@@ -142,7 +142,7 @@ export default function Dashboard({ auth, books }) {
                     </div>
                 </form>
             </Modal>
-            <Modal show={confirmingBookUpdate} onClose={closeModal}>
+            <Modal show={confirmingBookUpdate} onClose={closeModal_u}>
                 <form onSubmit={updateBook} className="p-6">
                     <h2 className="text-lg font-medium text-gray-900">
                         Are you sure you want to delete your account?
@@ -198,7 +198,7 @@ export default function Dashboard({ auth, books }) {
                         <SecondaryButton onClick={closeModal_u}>キャンセル</SecondaryButton>
 
                         <BlueButton className="ms-3" disabled={processing}>
-                            登録する
+                            更新する
                         </BlueButton>
                     </div>
                 </form>
