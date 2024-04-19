@@ -10,8 +10,9 @@ import BlueButton from '@/Components/BlueButton';
 import GreenButton from '@/Components/GreenButton';
 import TextAreaInput from '@/Components/TextAreaInput';
 import Select from '@/Components/Select';
+import DangerButton from '@/Components/DangerButton';
 
-export default function Dashboard({ auth, books }) {
+export default function Dashboard({ auth, books, message }) {
     const [confirmingUserDeletion, setConfirmingUserDeletion] = useState(false);
     const [confirmingBookUpdate, setConfirmingBookUpdate] = useState(false);
     const passwordInput = useRef();
@@ -48,6 +49,7 @@ export default function Dashboard({ auth, books }) {
             onFinish: () => reset(),
         });
     };
+
     const deleteUser = (e) => {
         e.preventDefault();
 
@@ -55,6 +57,13 @@ export default function Dashboard({ auth, books }) {
             preserveScroll: true,
             onSuccess: () => closeModal(),
             onError: () => passwordInput.current.focus(),
+            onFinish: () => reset(),
+        });
+    };
+
+    const deleteBook = (id) => {
+        destroy(route('books.destroy', id), {
+            preserveScroll: true,
             onFinish: () => reset(),
         });
     };
@@ -84,12 +93,10 @@ export default function Dashboard({ auth, books }) {
             <Modal show={confirmingUserDeletion} onClose={closeModal}>
                 <form onSubmit={deleteUser} className="p-6">
                     <h2 className="text-lg font-medium text-gray-900">
-                        Are you sure you want to delete your account?
+                        新規登録
                     </h2>
 
                     <p className="mt-1 text-sm text-gray-600">
-                        Once your account is deleted, all of its resources and data will be permanently deleted. Please
-                        enter your password to confirm you would like to permanently delete your account.
                     </p>
 
                     <div className="mt-6">
@@ -145,12 +152,10 @@ export default function Dashboard({ auth, books }) {
             <Modal show={confirmingBookUpdate} onClose={closeModal_u}>
                 <form onSubmit={updateBook} className="p-6">
                     <h2 className="text-lg font-medium text-gray-900">
-                        Are you sure you want to delete your account?
+                        登録情報を更新
                     </h2>
 
                     <p className="mt-1 text-sm text-gray-600">
-                        Once your account is deleted, all of its resources and data will be permanently deleted. Please
-                        enter your password to confirm you would like to permanently delete your account.
                     </p>
 
                     <div className="mt-6">
@@ -203,7 +208,8 @@ export default function Dashboard({ auth, books }) {
                     </div>
                 </form>
             </Modal>
-
+            {message && <div className="mt-2 text-blue-900  bg-green-100 p-3 rounded-lg text-center font-bold">{message}</div>}
+                    
                     <div>
                         <table className="w-full bg-gray-100 mt-2">
                             <thead className="bg-blue-100">
@@ -229,6 +235,9 @@ export default function Dashboard({ auth, books }) {
                                             </GreenButton>
                                         </td>
                                         <td className='border border-gray-400 px-2 py-2'>
+                                            <DangerButton onClick={() => deleteBook(book.id)}>
+                                                削除
+                                            </DangerButton>
                                         </td>
                                     </tr>
                                 ))}
